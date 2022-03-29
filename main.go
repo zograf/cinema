@@ -2,15 +2,17 @@ package main
 
 import (
 	"context"
-	"log"
-	"net/http"
-	"time"
-
 	"github.com/gin-gonic/gin"
+	"github.com/zograf/cinema/cinema"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
+	"net/http"
+	"time"
 )
+
+var app *cinema.App
 
 func dbConnect() *mongo.Client {
 	serverAPIOptions := options.ServerAPI(options.ServerAPIVersion1)
@@ -28,14 +30,8 @@ func dbConnect() *mongo.Client {
 }
 
 func get(c *gin.Context) {
-	client := dbConnect()
-	filter := bson.D{{"test", "test"}}
-	cursor, err := client.Database("cinema").Collection("cinema").Find(context.TODO(), filter)
-	check(err)
-	var result []bson.M
-	err = cursor.All(context.TODO(), &result)
-	check(err)
-	c.JSON(http.StatusOK, gin.H{"data": result})
+	result := app.Find("cinema", bson.E{"test", "test"})
+	c.JSON(http.StatusOK, result)
 }
 
 func put(c *gin.Context) {
@@ -48,11 +44,13 @@ func del(c *gin.Context) {
 
 func main() {
 	router := gin.Default()
+	client := dbConnect()
 
 	router.GET("/", get)
 	router.POST("/", put)
 	router.DELETE("/", del)
 
+	app = cinema.CreateApp("cinema", client)
 	router.Run()
 }
 
