@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -13,28 +12,30 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func dbConnect() (*mongo.Client, context.Context) {
+func dbConnect() *mongo.Client {
 	serverAPIOptions := options.ServerAPI(options.ServerAPIVersion1)
 	clientOptions := options.Client().
-		ApplyURI("mongodb+srv://admin:admin@uptest.idmbk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority").
+		ApplyURI("mongodb+srv://admin:admin@uptest.idmbk.mongodb.net/cinema?retryWrites=true&w=majority").
 		SetServerAPIOptions(serverAPIOptions)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	client, err := mongo.Connect(ctx, clientOptions)
+	// ctx is actually irrelevant for querries
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Connection successful!")
-	return client, ctx
+	return client
 }
 
 func get(c *gin.Context) {
-	client, context := dbConnect()
-	cursor, _ := client.Database("cinema").Collection("cinema").Find(context, bson.D{})
-	var results []bson.M
-	_ = cursor.All(context, &results)
-	fmt.Println(results)
-	c.JSON(http.StatusOK, gin.H{"data": "DUMMY"})
+	client := dbConnect()
+	filter := bson.D{{"test", "test"}}
+	cursor, err := client.Database("cinema").Collection("cinema").Find(context.TODO(), filter)
+	check(err)
+	var result []bson.M
+	err = cursor.All(context.TODO(), &result)
+	check(err)
+	c.JSON(http.StatusOK, gin.H{"data": result})
 }
 
 func put(c *gin.Context) {
@@ -53,4 +54,10 @@ func main() {
 	router.DELETE("/", del)
 
 	router.Run()
+}
+
+func check(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
