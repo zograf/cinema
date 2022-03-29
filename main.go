@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -28,6 +29,7 @@ func dbConnect() *mongo.Client {
 }
 
 func get(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
 	client := dbConnect()
 	filter := bson.D{{"test", "test"}}
 	cursor, err := client.Database("cinema").Collection("cinema").Find(context.TODO(), filter)
@@ -39,10 +41,12 @@ func get(c *gin.Context) {
 }
 
 func put(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
 	c.JSON(http.StatusOK, gin.H{"data": "DUMMY"})
 }
 
 func del(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
 	c.JSON(http.StatusOK, gin.H{"data": "DUMMY"})
 }
 
@@ -53,6 +57,7 @@ func main() {
 	router.POST("/", put)
 	router.DELETE("/", del)
 
+	router.Use(cors.Default())
 	router.Run()
 }
 
