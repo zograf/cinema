@@ -17,6 +17,18 @@ func get(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
+func login(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
+	username := c.Param("username")
+	password := c.Param("password")
+	result := app.Find("Users", bson.E{Key: "username", Value: username})
+	if result["password"] == password {
+		c.JSON(http.StatusOK, result)
+	} else {
+		c.JSON(http.StatusNotFound, gin.H{"bravo": "retarde"})
+	}
+}
+
 func put(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	c.JSON(http.StatusOK, gin.H{"data": "DUMMY"})
@@ -32,6 +44,7 @@ func main() {
 	app = cinema.CreateApp("Cinema")
 
 	router.GET("/", get)
+	router.GET("/login/:username/:password", login)
 	router.POST("/", put)
 	router.DELETE("/", del)
 
