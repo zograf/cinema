@@ -13,7 +13,7 @@ var app *cinema.App
 
 func get(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
-	result := app.Find("cinema", bson.E{"test", "test"})
+	result := app.Find("Test", bson.E{"test", "radi"})
 	c.JSON(http.StatusOK, result)
 }
 
@@ -29,7 +29,7 @@ func del(c *gin.Context) {
 
 func main() {
 	router := gin.Default()
-	app = cinema.CreateApp("cinema")
+	app = cinema.CreateApp("Cinema")
 
 	router.GET("/", get)
 	router.POST("/", put)

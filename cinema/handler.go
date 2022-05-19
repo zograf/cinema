@@ -2,7 +2,6 @@ package cinema
 
 import (
 	"context"
-	"fmt"
 	"io/ioutil"
 	"time"
 
@@ -23,7 +22,6 @@ func CreateApp(database string) *App {
 		database: database,
 	}
 	app.readConfig()
-	fmt.Println(app.url)
 	app.dbConnect()
 	return &app
 }
