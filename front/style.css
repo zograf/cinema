@@ -20,7 +20,7 @@
   margin-left: 12px;
 }
 
-.container body {
+body {
   background: #272125;
   font-family: 'Roboto', sans-serif;
 
@@ -99,6 +99,10 @@ input:focus::-webkit-input-placeholder {
   box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   transition-duration: 250ms;
+}
+
+.movieCard img {
+    width: 200px;
 }
 
 .movieCard:hover {

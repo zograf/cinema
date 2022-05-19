@@ -42,6 +42,7 @@ async function getMovies(){
 async function showMovies(){
     let moviesContainer = document.getElementById('all-movies');
     let movies = await getMovies();
+    console.log(movies)
     for(let movie of movies){
         let newCard = document.createElement('div');
         newCard.classList.add('movieCard');

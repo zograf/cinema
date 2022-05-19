@@ -19,17 +19,17 @@ type App struct {
 
 func (app *App) Login(username, password string) map[string]interface{} {
 	result := app.find("Users", bson.D{{Key: "username", Value: username}, {Key: "password", Value: password}})
-	return result
+	return result[0]
 }
 
-func (app *App) GetMovies() map[string]interface{} {
+func (app *App) GetMovies() []map[string]interface{} {
 	result := app.find("Repertoire", bson.D{})
 	return result
 }
 
 func (app *App) GetUserData(id int) map[string]interface{} {
 	result := app.find("Users", bson.D{{Key: "id", Value: id}})
-	return result
+	return result[0]
 }
 
 func CreateApp(database string) *App {
@@ -53,20 +53,22 @@ func (app *App) dbConnect() {
 	app.client = client
 }
 
-func (app *App) find(collection string, filter bson.D) map[string]interface{} {
+func (app *App) find(collection string, filter bson.D) []map[string]interface{} {
 	db := app.client.Database(app.database).Collection(collection)
 	cursor, err := db.Find(context.TODO(), filter)
 	check(err)
 	var result []bson.M
 	err = cursor.All(context.TODO(), &result)
 	check(err)
-	response := make(map[string]interface{})
-	for _, el := range result {
+	var responses []map[string]interface{}
+
+	for index, el := range result {
+		responses = append(responses, make(map[string]interface{}))
 		for key, value := range el {
-			response[key] = value
+			responses[index][key] = value
 		}
 	}
-	return response
+	return responses
 }
 
 func (app *App) readConfig() {
