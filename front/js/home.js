@@ -33,6 +33,40 @@ async function onLoad() {
     )
 }
 
+async function getMovies(){
+    return await fetch(endPoint + `/movies`).then(
+        response => response.json()
+    )
+}
+
+async function showMovies(){
+    let moviesContainer = document.getElementById('all-movies');
+    let movies = await getMovies();
+    for(let movie of movies){
+        let newCard = document.createElement('div');
+        newCard.classList.add('movieCard');
+        let movieImage = document.createElement('img');
+        movieImage.setAttribute('src', movie.thumbnail);
+        let movieName = document.createElement('h2');
+        movieName.innerText = movie.name;
+        let movieGenre = document.createElement('p');
+        movieGenre.innerText = movie.genre;
+        let movieMore = document.createElement('button');
+        movieMore.innerText = 'See more';
+        movieMore.setAttribute("key", movie.name);
+        movieMore.addEventListener('click', function() {
+            window.location.replace(`movie.html/${this.getAttribute('key')}`);
+        })
+
+        newCard.appendChild(movieImage);
+        newCard.appendChild(movieName);
+        newCard.appendChild(movieGenre);
+        newCard.appendChild(movieMore);
+        moviesContainer.appendChild(newCard);
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     onLoad();
+    showMovies();
 })
