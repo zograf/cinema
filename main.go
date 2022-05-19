@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -29,6 +30,15 @@ func login(c *gin.Context) {
 	}
 }
 
+func userData(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
+	idParameter := c.Param("id")
+	id, err := strconv.Atoi(idParameter)
+	check(err)
+	result := app.Find("Users", bson.E{Key: "id", Value: id})
+	c.JSON(http.StatusOK, result)
+}
+
 func put(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	c.JSON(http.StatusOK, gin.H{"data": "DUMMY"})
@@ -45,6 +55,7 @@ func main() {
 
 	router.GET("/", get)
 	router.GET("/login/:username/:password", login)
+	router.GET("/user/:id", userData)
 	router.POST("/", put)
 	router.DELETE("/", del)
 
