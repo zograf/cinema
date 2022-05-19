@@ -19,7 +19,10 @@ type App struct {
 
 func (app *App) Login(username, password string) map[string]interface{} {
 	result := app.find("Users", bson.D{{Key: "username", Value: username}, {Key: "password", Value: password}})
-	return result[0]
+	if len(result) != 0 {
+		return result[0]
+	}
+	return make(map[string]interface{})
 }
 
 func (app *App) GetMovies() []map[string]interface{} {
@@ -29,7 +32,10 @@ func (app *App) GetMovies() []map[string]interface{} {
 
 func (app *App) GetUserData(id int) map[string]interface{} {
 	result := app.find("Users", bson.D{{Key: "id", Value: id}})
-	return result[0]
+	if len(result) != 0 {
+		return result[0]
+	}
+	return make(map[string]interface{})
 }
 
 func CreateApp(database string) *App {
