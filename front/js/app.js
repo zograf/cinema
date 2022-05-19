@@ -26,18 +26,14 @@ function login() {
     let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;
     fetch(endPoint + `/login/${username}/${password}`).then(
-        response => {
-            if (response.ok) {
-                return response.json()
-            } else {
-                alert("wtf??")
-            }
-        }
+        response => response.json()
     ).then(
         data => {
-            if (!data)
-                return
-            window.location.replace("home.html?id=" + data.id)
+            if (Object.keys(data).length === 0) {
+                alert("Login failed")
+            } else {
+                window.location.replace("home.html?id=" + data.id)
+            }
         }
     )
 }

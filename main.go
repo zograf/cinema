@@ -7,14 +7,13 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/zograf/cinema/cinema"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 var app *cinema.App
 
-func get(c *gin.Context) {
+func getMovies(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
-	result := app.Find("Test", bson.E{"test", "radi"})
+	result := app.GetMovies()
 	c.JSON(http.StatusOK, result)
 }
 
@@ -22,20 +21,16 @@ func login(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	username := c.Param("username")
 	password := c.Param("password")
-	result := app.Find("Users", bson.E{Key: "username", Value: username})
-	if result["password"] == password {
-		c.JSON(http.StatusOK, result)
-	} else {
-		c.JSON(http.StatusNotFound, gin.H{"bravo": "retarde"})
-	}
+	result := app.Login(username, password)
+	c.JSON(http.StatusOK, result)
 }
 
-func userData(c *gin.Context) {
+func getUserData(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	idParameter := c.Param("id")
 	id, err := strconv.Atoi(idParameter)
 	check(err)
-	result := app.Find("Users", bson.E{Key: "id", Value: id})
+	result := app.GetUserData(id)
 	c.JSON(http.StatusOK, result)
 }
 
@@ -53,10 +48,13 @@ func main() {
 	router := gin.Default()
 	app = cinema.CreateApp("Cinema")
 
-	router.GET("/", get)
+	// Get endpoints
 	router.GET("/login/:username/:password", login)
-	router.GET("/user/:id", userData)
+	router.GET("/user/:id", getUserData)
+	router.GET("/movies", getMovies)
+	// Post endpoints
 	router.POST("/", put)
+	// Delete endpoints
 	router.DELETE("/", del)
 
 	router.Use(cors.Default())

@@ -17,6 +17,21 @@ type App struct {
 	url      string
 }
 
+func (app *App) Login(username, password string) map[string]interface{} {
+	result := app.find("Users", bson.D{{Key: "username", Value: username}, {Key: "password", Value: password}})
+	return result
+}
+
+func (app *App) GetMovies() map[string]interface{} {
+	result := app.find("Repertoire", bson.D{})
+	return result
+}
+
+func (app *App) GetUserData(id int) map[string]interface{} {
+	result := app.find("Users", bson.D{{Key: "id", Value: id}})
+	return result
+}
+
 func CreateApp(database string) *App {
 	app := App{
 		database: database,
@@ -38,15 +53,13 @@ func (app *App) dbConnect() {
 	app.client = client
 }
 
-func (app *App) Find(collection string, query bson.E) map[string]interface{} {
+func (app *App) find(collection string, filter bson.D) map[string]interface{} {
 	db := app.client.Database(app.database).Collection(collection)
-	filter := bson.D{query}
 	cursor, err := db.Find(context.TODO(), filter)
 	check(err)
 	var result []bson.M
 	err = cursor.All(context.TODO(), &result)
 	check(err)
-	//fmt.Println("AAAA", result)
 	response := make(map[string]interface{})
 	for _, el := range result {
 		for key, value := range el {
