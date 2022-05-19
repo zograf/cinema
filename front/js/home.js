@@ -54,8 +54,8 @@ async function showMovies(){
         let movieMore = document.createElement('button');
         movieMore.innerText = 'See more';
         movieMore.setAttribute("key", movie.name);
-        movieMore.addEventListener('click', (e) => {
-
+        movieMore.addEventListener('click', function() {
+            window.location.replace(`movie.html/${this.getAttribute('key')}`);
         })
 
         newCard.appendChild(movieImage);
