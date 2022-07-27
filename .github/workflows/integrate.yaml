@@ -1,0 +1,18 @@
+name: Go Continuous Integration
+
+on: 
+  pull_request:
+      branches: [master]
+
+jobs:
+  test_pull_request:
+      runs-on: ubuntu_latest
+      steps: 
+        - uses: actions/checkout@v3
+        - uses: actions/setup-go@v3
+          with: 
+            go-version-file: './go.mod'
+        - run: go version
+        - run: go mod tidy
+        - run: go test all
+        - run: go run .        
