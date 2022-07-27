@@ -5,8 +5,8 @@ go 1.18
 require (
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.7
-	github.com/itsjamie/gin-cors v0.0.0-20220228161158-ef28d3d2a0a8
 	go.mongodb.org/mongo-driver v1.8.4
+	gopkg.in/yaml.v2 v2.2.8
 )
 
 require (
@@ -33,5 +33,4 @@ require (
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
 	golang.org/x/sys v0.0.0-20220329152356-43be30ef3008 // indirect
 	golang.org/x/text v0.3.5 // indirect
-	gopkg.in/yaml.v2 v2.2.8 // indirect
 )
