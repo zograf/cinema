@@ -1,0 +1,11 @@
+main:
+  - packages/main/*
+
+zograf:
+  - packages/zograf/*
+
+upocek:
+  - packages/upocek/*
+
+shared:
+  - packages/shared/*
