@@ -56,6 +56,7 @@ func main() {
 	router.GET("/login/:username/:password", login)
 	router.GET("/user/:id", getUserData)
 	router.GET("/movies", getMovies)
+
 	router.POST("/", put)
 	router.DELETE("/", del)
 
