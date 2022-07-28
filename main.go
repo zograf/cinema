@@ -53,12 +53,15 @@ func main() {
 	router := gin.Default()
 	app = cinema.CreateApp("Cinema", url)
 
+	// GET
 	router.GET("/login/:username/:password", login)
 	router.GET("/user/:id", getUserData)
 	router.GET("/movies", getMovies)
 
+	// POST
 	router.POST("/", put)
 
+	// DELETE
 	router.DELETE("/", del)
 
 	router.Use(cors.Default())
