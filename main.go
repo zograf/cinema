@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"net/http"
 	"strconv"
 
@@ -10,6 +11,7 @@ import (
 )
 
 var app *cinema.App
+var url string
 
 func getMovies(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
@@ -45,8 +47,11 @@ func del(c *gin.Context) {
 }
 
 func main() {
+	flag.StringVar(&url, "url", "", "mongodb connection string")
+	flag.Parse()
+
 	router := gin.Default()
-	app = cinema.CreateApp("Cinema")
+	app = cinema.CreateApp("Cinema", url)
 
 	// Get endpoints
 	router.GET("/login/:username/:password", login)
