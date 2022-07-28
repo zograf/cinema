@@ -38,11 +38,17 @@ func (app *App) GetUserData(id int) map[string]interface{} {
 	return make(map[string]interface{})
 }
 
-func CreateApp(database string) *App {
+func CreateApp(database, url string) *App {
 	app := App{
 		database: database,
 	}
-	app.readConfig()
+
+	if url == "" {
+		app.readConfig()
+	} else {
+		app.url = url
+	}
+
 	app.dbConnect()
 	return &app
 }
